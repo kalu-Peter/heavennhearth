@@ -123,7 +123,7 @@ export default function HomePage() {
         */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+          style={{ backgroundImage: "url('/hero.jpg')" }}
         />
         {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/30" />
