@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #1B4332;
+  --color-forest-light: #2D6A4F;
+  --color-forest-mid: #40916C;
+  --color-meadow: #52B788;
+  --color-gold: #D4A017;
+  --color-gold-light: #F0C040;
+  --color-cream: #FEFAE0;
+  --color-cream-dark: #F4EED4;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
