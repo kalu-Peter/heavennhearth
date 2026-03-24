@@ -14,7 +14,7 @@ export default function PropertyCard({ property }) {
   const [liked, setLiked] = useState(false)
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col">
       {/* Image */}
       <div className="relative h-52 overflow-hidden shrink-0">
         <img
@@ -91,7 +91,7 @@ export default function PropertyCard({ property }) {
           </ul>
         )}
 
-        <button className="mt-auto w-full flex items-center justify-center gap-2 bg-forest text-white py-2.5 rounded-xl font-semibold hover:bg-forest-light transition-colors text-sm group/btn">
+        <button className="mt-auto w-full flex items-center justify-center gap-2 bg-forest text-white py-2.5 rounded-lg font-semibold hover:bg-forest-light transition-colors text-sm group/btn">
           View Details
           <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
         </button>
