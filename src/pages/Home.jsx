@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Search, MapPin, ArrowRight,
   Shield, FileText, Globe, DollarSign,
   Home, Building2, Briefcase, Settings,
-  Star,
+  Star, MessageCircle, Mail, PhoneCall,
 } from 'lucide-react'
+import PropertyCard from '../components/PropertyCard'
+import { getProperties } from '../api/properties'
 /* ─── Data ─────────────────────────────────────────────────── */
 
 const heroStats = [
@@ -91,12 +93,53 @@ const testimonials = [
 
 /* ─── Component ─────────────────────────────────────────────── */
 
+const TYPE_OPTIONS = ['All Types', 'Land / Plot', 'House / Villa', 'Villa', 'Apartment', 'Farm', 'Commercial']
+const TYPE_MAP = {
+  'Land / Plot':   'land',
+  'House / Villa': 'house',
+  'Villa':         'villa',
+  'Apartment':     'apartment',
+  'Farm':          'farm',
+  'Commercial':    'commercial',
+}
+
+const BUY_BUDGETS  = ['Any Budget', 'Under KES 5M', 'KES 5M – 15M', 'KES 15M – 30M', 'KES 30M – 60M', 'Above KES 60M']
+const RENT_BUDGETS = ['Any Price', 'Under KES 50k/mo', 'KES 50k – 150k/mo', 'KES 150k – 300k/mo', 'KES 300k+/mo']
+
 export default function HomePage() {
-  const [tab, setTab] = useState('Buy')
-  const [location, setLocation] = useState('')
+  const navigate = useNavigate()
+
+  const [tab, setTab]               = useState('Buy')
+  const [location, setLocation]     = useState('')
   const [propertyType, setPropertyType] = useState('All Types')
-  const [budget, setBudget] = useState('Any Budget')
-  const [size, setSize] = useState('')
+  const [budget, setBudget]         = useState('Any Budget')
+  const [featured, setFeatured]     = useState([])
+  const [loadingFeatured, setLoadingFeatured] = useState(true)
+
+  // Reset budget when tab switches
+  function switchTab(t) {
+    setTab(t)
+    setBudget(t === 'Rent' ? 'Any Price' : 'Any Budget')
+  }
+
+  useEffect(() => {
+    getProperties()
+      .then((data) => setFeatured(data.filter((p) => p.featured).slice(0, 6)))
+      .catch(() => {})
+      .finally(() => setLoadingFeatured(false))
+  }, [])
+
+  function handleSearch() {
+    const params = new URLSearchParams()
+    if (location.trim()) params.set('q', location.trim())
+    const typeVal = TYPE_MAP[propertyType]
+    if (typeVal) params.set('type', typeVal)
+    const budgets = tab === 'Rent' ? RENT_BUDGETS : BUY_BUDGETS
+    const priceIdx = budgets.indexOf(budget)
+    if (priceIdx > 0) params.set('price', String(priceIdx))
+    const qs = params.toString()
+    navigate(tab === 'Rent' ? `/rent${qs ? `?${qs}` : ''}` : `/buy${qs ? `?${qs}` : ''}`)
+  }
 
   return (
     <div className="pt-16">
@@ -173,11 +216,9 @@ export default function HomePage() {
               {['Buy', 'Rent', 'Sell'].map((t) => (
                 <button
                   key={t}
-                  onClick={() => setTab(t)}
+                  onClick={() => switchTab(t)}
                   className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    tab === t
-                      ? 'bg-forest text-white shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
+                    tab === t ? 'bg-forest text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
                   {t}
@@ -185,78 +226,94 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Location */}
-            <div className="mb-3">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
-                Location
-              </label>
-              <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-forest transition-colors">
-                <MapPin size={15} className="text-forest-mid shrink-0" />
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Nairobi, Mombasa, Kisumu..."
-                  className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
-                />
+            {tab === 'Sell' ? (
+              /* ── Sell panel ── */
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Ready to list your property? Our team will handle the marketing,
+                  viewings, and paperwork — contact us to get started.
+                </p>
+                <a
+                  href="https://wa.me/254700000001?text=Hi%2C%20I%27d%20like%20to%20sell%20my%20property%20through%20Heaven%20%26%20Hearth%20Realty."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2.5 w-full bg-[#25D366] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#20b858] transition-colors"
+                >
+                  <MessageCircle size={18} /> Chat on WhatsApp
+                </a>
+                <a
+                  href="mailto:info@heavenhearth.co.ke?subject=I%20want%20to%20sell%20my%20property&body=Hi%2C%20I%27d%20like%20to%20list%20my%20property%20with%20Heaven%20%26%20Hearth%20Realty."
+                  className="flex items-center justify-center gap-2.5 w-full bg-forest text-white py-3 rounded-xl font-bold text-sm hover:bg-forest-light transition-colors"
+                >
+                  <Mail size={18} /> Send an Email
+                </a>
+                <a
+                  href="tel:+254700000001"
+                  className="flex items-center justify-center gap-2.5 w-full border border-forest text-forest py-3 rounded-xl font-bold text-sm hover:bg-forest/5 transition-colors"
+                >
+                  <PhoneCall size={18} /> Call Us Now
+                </a>
+                <p className="text-center text-xs text-gray-400">
+                  Mon – Sat, 8 am – 6 pm EAT
+                </p>
               </div>
-            </div>
+            ) : (
+              /* ── Buy / Rent search panel ── */
+              <>
+                {/* Location */}
+                <div className="mb-3">
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                    Location
+                  </label>
+                  <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-forest transition-colors">
+                    <MapPin size={15} className="text-forest-mid shrink-0" />
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                      placeholder="Nairobi, Mombasa, Kisumu…"
+                      className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
+                    />
+                  </div>
+                </div>
 
-            {/* Property type */}
-            <div className="mb-3">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
-                Property Type
-              </label>
-              <select
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-forest transition-colors bg-white"
-              >
-                <option>All Types</option>
-                <option>Land / Plot</option>
-                <option>House / Villa</option>
-                <option>Apartment</option>
-                <option>Farm</option>
-                <option>Commercial</option>
-              </select>
-            </div>
+                {/* Property type */}
+                <div className="mb-3">
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                    Property Type
+                  </label>
+                  <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-forest transition-colors bg-white"
+                  >
+                    {TYPE_OPTIONS.map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
 
-            {/* Budget */}
-            <div className="mb-3">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
-                Budget
-              </label>
-              <select
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-forest transition-colors bg-white"
-              >
-                <option>Any Budget</option>
-                <option>Under KES 1M</option>
-                <option>KES 1M – 5M</option>
-                <option>KES 5M – 15M</option>
-                <option>KES 15M – 50M</option>
-                <option>KES 50M+</option>
-              </select>
-            </div>
+                {/* Budget */}
+                <div className="mb-5">
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-forest transition-colors bg-white"
+                  >
+                    {(tab === 'Rent' ? RENT_BUDGETS : BUY_BUDGETS).map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
 
-            {/* Size */}
-            <div className="mb-5">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
-                Size / Area
-              </label>
-              <input
-                type="text"
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-                placeholder="e.g. 50×100, 1/4 acre, 3 bedrooms"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-forest transition-colors"
-              />
-            </div>
-
-            <button className="w-full bg-forest text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-forest-light transition-colors">
-              <Search size={18} /> Search Properties
-            </button>
+                <button
+                  onClick={handleSearch}
+                  className="w-full bg-forest text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-forest-light transition-colors"
+                >
+                  <Search size={18} /> Search Properties
+                </button>
+              </>
+            )}
           </div>
 
         </div>
@@ -281,6 +338,49 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* ════════════════════════════════════════════════
+          FEATURED LISTINGS
+      ════════════════════════════════════════════════ */}
+      <section className="py-20 bg-white" id="listings">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+            <div>
+              <span className="text-gold font-semibold text-xs uppercase tracking-widest">
+                Handpicked for You
+              </span>
+              <h2 className="text-4xl font-extrabold text-forest mt-1">Featured Listings</h2>
+            </div>
+            <Link
+              to="/buy"
+              className="inline-flex items-center gap-1.5 bg-forest text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-forest-light transition-colors shrink-0"
+            >
+              All Properties <ArrowRight size={15} />
+            </Link>
+          </div>
+
+          {loadingFeatured ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="bg-gray-100 rounded-lg h-80 animate-pulse" />
+              ))}
+            </div>
+          ) : featured.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured.map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-gray-400">
+              <p className="text-lg font-medium">No featured listings yet.</p>
+              <p className="text-sm mt-1">Check back soon — new properties are added regularly.</p>
+            </div>
+          )}
+
+        </div>
+      </section>
 
       {/* ════════════════════════════════════════════════
           SERVICES

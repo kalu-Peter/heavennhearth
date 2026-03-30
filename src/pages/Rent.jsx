@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import PropertyCard from '../components/PropertyCard'
 
 const PROPERTY_TYPES = ['All', 'farm', 'house', 'apartment', 'commercial']
-const KENYAN_COUNTIES = [
-  'All Counties','Nairobi','Mombasa','Kisumu','Nakuru','Kiambu','Machakos',
-  'Kilifi','Meru','Nyeri','Nakuru','Kajiado','Kirinyaga','Murang\'a',
-]
 
 const PRICE_RANGES = [
   { label: 'Any Price', min: 0, max: Infinity },
@@ -17,49 +14,43 @@ const PRICE_RANGES = [
   { label: 'KES 300k+/mo',          min: 300_000, max: Infinity },
 ]
 
-function toCardProp(p) {
+function normalise(p) {
   const primary = p.property_images?.find((i) => i.is_primary) ?? p.property_images?.[0]
-  const period  = p.price_period === 'yearly' ? '/yr' : '/mo'
-  return {
-    id:       p.id,
-    title:    p.title,
-    location: p.location + (p.county ? `, ${p.county} County` : ''),
-    price:    `KES ${Number(p.price).toLocaleString()}${period}`,
-    area:     p.area_value ? `${p.area_value} ${p.area_unit}` : '–',
-    type:     p.property_type,
-    badge:    p.badge ?? 'For Rent',
-    image:    primary?.url ?? '/farm land.jpg',
-    features: p.property_features?.map((f) => f.feature) ?? [],
-    beds:     p.bedrooms  ?? undefined,
-    baths:    p.bathrooms ?? undefined,
-  }
+  return { ...p, primary_image: primary?.url ?? null, badge: p.badge ?? 'For Rent' }
 }
 
-// Normalise rent price to monthly for filtering
 function monthlyPrice(p) {
   return p.price_period === 'yearly' ? p.price / 12 : p.price
 }
 
 export default function Rent() {
+  const [searchParams] = useSearchParams()
+
   const [properties, setProperties] = useState([])
+  const [counties, setCounties]     = useState([])
   const [loading, setLoading]       = useState(true)
 
-  const [search,     setSearch]     = useState('')
-  const [propType,   setPropType]   = useState('All')
+  const [search,     setSearch]     = useState(searchParams.get('q') ?? '')
+  const [propType,   setPropType]   = useState(searchParams.get('type') ?? 'All')
   const [county,     setCounty]     = useState('All Counties')
-  const [priceRange, setPriceRange] = useState(0)
+  const [priceRange, setPriceRange] = useState(Number(searchParams.get('price') ?? '0'))
 
   useEffect(() => {
     async function load() {
       setLoading(true)
       const { data } = await supabase
         .from('properties')
-        .select('*, property_images(id, url, is_primary), property_features(feature)')
+        .select('*, property_images(id, url, is_primary)')
         .eq('listing_type', 'rent')
         .eq('status', 'active')
         .order('featured', { ascending: false })
         .order('created_at', { ascending: false })
-      setProperties(data ?? [])
+      const normalised = (data ?? []).map(normalise)
+      setProperties(normalised)
+      const unique = ['All Counties', ...Array.from(
+        new Set(normalised.map(p => p.county).filter(Boolean).sort())
+      )]
+      setCounties(unique)
       setLoading(false)
     }
     load()
@@ -69,7 +60,7 @@ export default function Rent() {
 
   const filtered = properties.filter((p) => {
     const q = search.toLowerCase()
-    if (q && !p.title.toLowerCase().includes(q) && !p.location.toLowerCase().includes(q)) return false
+    if (q && !p.title.toLowerCase().includes(q) && !p.location.toLowerCase().includes(q) && !(p.county ?? '').toLowerCase().includes(q)) return false
     if (propType !== 'All' && p.property_type !== propType) return false
     if (county !== 'All Counties' && p.county !== county) return false
     const mp = monthlyPrice(p)
@@ -125,7 +116,7 @@ export default function Rent() {
             onChange={(e) => setCounty(e.target.value)}
             className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest"
           >
-            {KENYAN_COUNTIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            {counties.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
 
           <select
@@ -166,7 +157,7 @@ export default function Rent() {
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {filtered.map((p) => (
-                  <PropertyCard key={p.id} property={toCardProp(p)} />
+                  <PropertyCard key={p.id} property={p} />
                 ))}
               </div>
             ) : (

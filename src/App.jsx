@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home           from './pages/Home'
 import Buy            from './pages/Buy'
 import Rent           from './pages/Rent'
+import PropertyDetail from './pages/PropertyDetail'
 import AdminLogin     from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 
@@ -34,9 +35,10 @@ export default function App() {
                 <Navbar />
                 <main>
                   <Routes>
-                    <Route path="/"     element={<Home />} />
-                    <Route path="/buy"  element={<Buy />} />
-                    <Route path="/rent" element={<Rent />} />
+                    <Route path="/"                element={<Home />} />
+                    <Route path="/buy"             element={<Buy />} />
+                    <Route path="/rent"            element={<Rent />} />
+                    <Route path="/property/:id"    element={<PropertyDetail />} />
                   </Routes>
                 </main>
                 <Footer />
