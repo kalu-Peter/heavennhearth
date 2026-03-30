@@ -1,24 +1,50 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import Home from './pages/Home'
-import BuyLand from './pages/BuyLand'
-import RentFarm from './pages/RentFarm'
-import SellHouse from './pages/SellHouse'
+import ProtectedRoute from './components/ProtectedRoute'
+
+import Home           from './pages/Home'
+import Buy            from './pages/Buy'
+import Rent           from './pages/Rent'
+import AdminLogin     from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <main>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/buy-land" element={<BuyLand />} />
-          <Route path="/rent-farm" element={<RentFarm />} />
-          <Route path="/sell-house" element={<SellHouse />} />
+          {/* Admin routes – no Navbar/Footer */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Public routes */}
+          <Route
+            path="/*"
+            element={
+              <>
+                <Navbar />
+                <main>
+                  <Routes>
+                    <Route path="/"     element={<Home />} />
+                    <Route path="/buy"  element={<Buy />} />
+                    <Route path="/rent" element={<Rent />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </>
+            }
+          />
         </Routes>
-      </main>
-      <Footer />
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }

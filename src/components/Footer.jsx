@@ -3,9 +3,8 @@ import { MapPin, Phone, Mail, Globe, Share2, Camera, Play } from 'lucide-react'
 
 const quickLinks = [
   { to: '/', label: 'Home' },
-  { to: '/buy-land', label: 'Buy Land' },
-  { to: '/rent-farm', label: 'Rent a Farm' },
-  { to: '/sell-house', label: 'Sell / Buy House' },
+  { to: '/buy', label: 'Buy Property' },
+  { to: '/rent', label: 'Rent Property' },
 ]
 
 const socials = [

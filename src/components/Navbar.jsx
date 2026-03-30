@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 const navLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/buy-land', label: 'Buy Land' },
-  { to: '/rent-farm', label: 'Rent Farm' },
-  { to: '/sell-house', label: 'Sell House' },
+  { to: '/',     label: 'Home' },
+  { to: '/buy',  label: 'Buy' },
+  { to: '/rent', label: 'Rent' },
 ]
 
 export default function Navbar() {
@@ -40,9 +39,12 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <button className="bg-gold text-forest text-sm font-bold px-4 py-2 rounded-lg hover:bg-gold-light transition-colors">
-            List Property
-          </button>
+          <Link
+            to="/admin/login"
+            className="bg-gold text-forest text-sm font-bold px-4 py-2 rounded-lg hover:bg-gold-light transition-colors"
+          >
+            Admin
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -51,21 +53,9 @@ export default function Navbar() {
           className="md:hidden flex flex-col gap-1 p-2"
           aria-label="Toggle menu"
         >
-          <span
-            className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${
-              open ? 'rotate-45 translate-y-1.5' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
-              open ? 'opacity-0' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${
-              open ? '-rotate-45 -translate-y-1.5' : ''
-            }`}
-          />
+          <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-1.5' : ''}`} />
+          <span className={`block w-5 h-0.5 bg-white transition-all duration-300 ${open ? 'opacity-0' : ''}`} />
+          <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-1.5' : ''}`} />
         </button>
       </div>
 
@@ -87,9 +77,13 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <button className="mt-3 bg-gold text-forest text-sm font-bold px-4 py-2.5 rounded-lg w-full">
-            List Property
-          </button>
+          <Link
+            to="/admin/login"
+            onClick={() => setOpen(false)}
+            className="mt-3 bg-gold text-forest text-sm font-bold px-4 py-2.5 rounded-lg w-full text-center block"
+          >
+            Admin
+          </Link>
         </div>
       )}
     </nav>

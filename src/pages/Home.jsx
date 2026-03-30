@@ -149,7 +149,7 @@ export default function HomePage() {
 
             <div className="flex flex-wrap gap-4 mb-12">
               <Link
-                to="/buy-land"
+                to="/buy"
                 className="inline-flex items-center gap-2 bg-gold text-forest font-bold px-7 py-3.5 rounded-xl hover:bg-gold-light transition-colors shadow-lg"
               >
                 Browse Listings <ArrowRight size={18} />
@@ -308,7 +308,7 @@ export default function HomePage() {
               <h2 className="text-4xl font-extrabold text-forest mt-1">Featured Listings</h2>
             </div>
             <Link
-              to="/buy-land"
+              to="/buy"
               className="text-forest font-semibold text-sm inline-flex items-center gap-1 hover:gap-2 transition-all shrink-0"
             >
               View all <ArrowRight size={15} />
@@ -492,7 +492,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to="/buy-land"
+              to="/buy"
               className="inline-flex items-center gap-2 bg-gold text-forest font-bold px-8 py-3.5 rounded-xl hover:bg-gold-light transition-colors shadow-lg"
             >
               <Search size={18} /> Browse Listings
