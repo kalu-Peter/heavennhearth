@@ -4,11 +4,8 @@ import {
   Search, MapPin, ArrowRight,
   Shield, FileText, Globe, DollarSign,
   Home, Building2, Briefcase, Settings,
-  Star, CheckCircle2,
+  Star,
 } from 'lucide-react'
-import PropertyCard from '../components/PropertyCard'
-import { landProperties, farmProperties, houseProperties } from '../data/properties'
-
 /* ─── Data ─────────────────────────────────────────────────── */
 
 const heroStats = [
@@ -96,19 +93,10 @@ const testimonials = [
 
 export default function HomePage() {
   const [tab, setTab] = useState('Buy')
-  const [filter, setFilter] = useState('All')
   const [location, setLocation] = useState('')
   const [propertyType, setPropertyType] = useState('All Types')
   const [budget, setBudget] = useState('Any Budget')
   const [size, setSize] = useState('')
-
-  const allFeatured = [...landProperties, ...houseProperties, ...farmProperties]
-  const featured = (() => {
-    if (filter === 'Land')  return landProperties
-    if (filter === 'House') return houseProperties
-    if (filter === 'Farm')  return farmProperties
-    return allFeatured
-  })().slice(0, 6)
 
   return (
     <div className="pt-16">
@@ -295,54 +283,6 @@ export default function HomePage() {
       </div>
 
       {/* ════════════════════════════════════════════════
-          FEATURED LISTINGS
-      ════════════════════════════════════════════════ */}
-      <section className="py-20 bg-white" id="listings">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <span className="text-gold font-semibold text-xs uppercase tracking-widest">
-                Handpicked for You
-              </span>
-              <h2 className="text-4xl font-extrabold text-forest mt-1">Featured Listings</h2>
-            </div>
-            <Link
-              to="/buy"
-              className="text-forest font-semibold text-sm inline-flex items-center gap-1 hover:gap-2 transition-all shrink-0"
-            >
-              View all <ArrowRight size={15} />
-            </Link>
-          </div>
-
-          {/* Filter buttons */}
-          <div className="flex gap-2 mb-8 flex-wrap">
-            {['All', 'Land', 'House', 'Farm'].map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors border ${
-                  filter === f
-                    ? 'bg-forest text-white border-forest'
-                    : 'bg-white text-gray-500 border-gray-200 hover:border-forest hover:text-forest'
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-
-          {/* Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════
           SERVICES
       ════════════════════════════════════════════════ */}
       <section className="py-20 bg-gray-900" id="services">
@@ -488,7 +428,7 @@ export default function HomePage() {
             Ready to Buy, Sell or<br className="hidden sm:block" /> Invest in Kenya?
           </h2>
           <p className="text-white/65 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Join 3,400+ Kenyans who have found their perfect property through Heaven &amp; Hearth.
+            Join 3,400+ Kenyans who have found their perfect property through Heaven &amp; Hearth Realty.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

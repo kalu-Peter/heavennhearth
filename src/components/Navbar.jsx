@@ -17,7 +17,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <span className="text-2xl leading-none">&#x2302;</span>
           <span className="text-white font-bold text-xl tracking-tight">
-            Heaven<span className="text-gold">&amp;</span>Hearth
+            Heaven<span className="text-gold">&amp;</span>Hearth Realty
           </span>
         </Link>
 
@@ -39,12 +39,6 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <Link
-            to="/admin/login"
-            className="bg-gold text-forest text-sm font-bold px-4 py-2 rounded-lg hover:bg-gold-light transition-colors"
-          >
-            Admin
-          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -77,13 +71,6 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <Link
-            to="/admin/login"
-            onClick={() => setOpen(false)}
-            className="mt-3 bg-gold text-forest text-sm font-bold px-4 py-2.5 rounded-lg w-full text-center block"
-          >
-            Admin
-          </Link>
         </div>
       )}
     </nav>

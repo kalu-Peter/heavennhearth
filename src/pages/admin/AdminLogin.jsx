@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { Home, LogIn, Eye, EyeOff } from 'lucide-react'
+import { Home, LogIn, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 
 export default function AdminLogin() {
   const { signIn, user } = useAuth()
@@ -37,12 +37,20 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center px-4">
       <div className="w-full max-w-md">
+        {/* Back to home */}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-forest transition-colors mb-6"
+        >
+          <ArrowLeft size={15} />
+          Back to Home
+        </Link>
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-forest">
             <Home size={36} />
             <span className="text-3xl font-bold tracking-tight">
-              Heaven<span className="text-gold">&amp;</span>Hearth
+              Heaven<span className="text-gold">&amp;</span>Hearth Realty
             </span>
           </div>
           <p className="mt-2 text-gray-500 text-sm">Admin Portal</p>

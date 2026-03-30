@@ -22,7 +22,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h2 className="text-xl font-bold mb-3">
-              Heaven<span className="text-gold">&amp;</span>Hearth
+              Heaven<span className="text-gold">&amp;</span>Hearth Realty
             </h2>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
               Kenya's most trusted real estate platform — connecting buyers, sellers, and investors with verified properties across all 47 counties.
@@ -99,7 +99,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 py-5 px-4 text-center text-white/40 text-xs">
-        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Real Estate Ltd. Nairobi, Kenya. All rights reserved.
+        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Realty Ltd. Nairobi, Kenya. All rights reserved.
       </div>
     </footer>
   )
