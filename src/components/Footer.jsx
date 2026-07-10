@@ -82,15 +82,15 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm text-white/60">
                 <MapPin size={16} className="shrink-0 mt-0.5 text-gold" />
-                <span>Westlands Business Park, Waiyaki Way, Nairobi, Kenya</span>
+                <span>Kwale Town, Kwale County, Kenya</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <Phone size={16} className="shrink-0 text-gold" />
-                <span>+254 700 000 001</span>
+                <span>+254 757 740682</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <Mail size={16} className="shrink-0 text-gold" />
-                <span>info@heavenhearth.co.ke</span>
+                <span>heavenandhearthrealty@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -99,7 +99,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 py-5 px-4 text-center text-white/40 text-xs">
-        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Realty Ltd. Nairobi, Kenya. All rights reserved.
+        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Realty Ltd. Kwale, Kenya. All rights reserved.
       </div>
     </footer>
   )

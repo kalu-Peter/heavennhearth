@@ -330,16 +330,16 @@ export default function PropertyDetail() {
               {/* Direct contact */}
               <div className="mt-5 pt-5 border-t border-gray-100 flex flex-col gap-2">
                 <a
-                  href="tel:+254700000001"
+                  href="tel:+254757740682"
                   className="flex items-center gap-2 text-sm text-gray-600 hover:text-forest transition-colors"
                 >
-                  <Phone size={14} className="text-forest" /> +254 700 000 001
+                  <Phone size={14} className="text-forest" /> +254 757 740682
                 </a>
                 <a
-                  href="mailto:info@heavenhearth.co.ke"
+                  href="mailto:heavenandhearthrealty@gmail.com"
                   className="flex items-center gap-2 text-sm text-gray-600 hover:text-forest transition-colors"
                 >
-                  <Mail size={14} className="text-forest" /> info@heavenhearth.co.ke
+                  <Mail size={14} className="text-forest" /> heavenandhearthrealty@gmail.com
                 </a>
               </div>
             </div>

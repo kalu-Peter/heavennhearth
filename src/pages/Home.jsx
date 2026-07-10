@@ -4,7 +4,7 @@ import {
   Search, MapPin, ArrowRight,
   Shield, FileText, Globe, DollarSign,
   Home, Building2, Briefcase, Settings,
-  Star, MessageCircle, Mail, PhoneCall,
+  MessageCircle, Mail, PhoneCall, Ruler, LayoutGrid, Landmark,
 } from 'lucide-react'
 import PropertyCard from '../components/PropertyCard'
 import { getProperties } from '../api/properties'
@@ -45,6 +45,21 @@ const services = [
     title: 'Property Management',
     desc: 'Tenant sourcing, rent collection, and maintenance — we manage your investment so you don\'t have to.',
   },
+  {
+    Icon: Ruler,
+    title: 'Boundary Identification',
+    desc: 'Accurate on-the-ground boundary surveys to confirm your land\'s true extent and prevent disputes.',
+  },
+  {
+    Icon: LayoutGrid,
+    title: 'Subdivision',
+    desc: 'Professional land subdivision and planning services, fully compliant with county regulations.',
+  },
+  {
+    Icon: Landmark,
+    title: 'Land & Property Sales',
+    desc: 'End-to-end support buying or selling land and property, from due diligence to title transfer.',
+  },
 ]
 
 const whyUs = [
@@ -70,6 +85,7 @@ const whyUs = [
   },
 ]
 
+/* testimonials data — unused while the Client Stories section is removed
 const testimonials = [
   {
     name: 'Grace Wanjiku',
@@ -90,6 +106,7 @@ const testimonials = [
     initials: 'AM',
   },
 ]
+*/
 
 /* ─── Component ─────────────────────────────────────────────── */
 
@@ -175,7 +192,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-lg">
-              Browse 1,200+ verified listings across all 47 counties — from prime Nairobi plots to coastal villas and fertile farmlands.
+              Your trusted partner in land surveying &amp; real estate.
             </p>
 
             <div className="flex flex-wrap gap-4 mb-12">
@@ -234,7 +251,7 @@ export default function HomePage() {
                   viewings, and paperwork — contact us to get started.
                 </p>
                 <a
-                  href="https://wa.me/254700000001?text=Hi%2C%20I%27d%20like%20to%20sell%20my%20property%20through%20Heaven%20%26%20Hearth%20Realty."
+                  href="https://wa.me/254757740682?text=Hi%2C%20I%27d%20like%20to%20sell%20my%20property%20through%20Heaven%20%26%20Hearth%20Realty."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2.5 w-full bg-[#25D366] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#20b858] transition-colors"
@@ -242,13 +259,13 @@ export default function HomePage() {
                   <MessageCircle size={18} /> Chat on WhatsApp
                 </a>
                 <a
-                  href="mailto:info@heavenhearth.co.ke?subject=I%20want%20to%20sell%20my%20property&body=Hi%2C%20I%27d%20like%20to%20list%20my%20property%20with%20Heaven%20%26%20Hearth%20Realty."
+                  href="mailto:heavenandhearthrealty@gmail.com?subject=I%20want%20to%20sell%20my%20property&body=Hi%2C%20I%27d%20like%20to%20list%20my%20property%20with%20Heaven%20%26%20Hearth%20Realty."
                   className="flex items-center justify-center gap-2.5 w-full bg-forest text-white py-3 rounded-xl font-bold text-sm hover:bg-forest-light transition-colors"
                 >
                   <Mail size={18} /> Send an Email
                 </a>
                 <a
-                  href="tel:+254700000001"
+                  href="tel:+254757740682"
                   className="flex items-center justify-center gap-2.5 w-full border border-forest text-forest py-3 rounded-xl font-bold text-sm hover:bg-forest/5 transition-colors"
                 >
                   <PhoneCall size={18} /> Call Us Now
@@ -475,8 +492,8 @@ export default function HomePage() {
       </section>
 
       {/* ════════════════════════════════════════════════
-          TESTIMONIALS
-      ════════════════════════════════════════════════ */}
+          TESTIMONIALS — temporarily removed
+      ════════════════════════════════════════════════
       <section className="py-20 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -491,7 +508,6 @@ export default function HomePage() {
                 key={name}
                 className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow flex flex-col"
               >
-                {/* Stars */}
                 <div className="flex items-center gap-1 text-gold mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} size={14} fill="currentColor" />
@@ -515,6 +531,7 @@ export default function HomePage() {
 
         </div>
       </section>
+      */}
 
       {/* ════════════════════════════════════════════════
           CTA
