@@ -4,7 +4,7 @@ import {
   Home, LogOut, Plus, Pencil, Trash2, X,
   Building2, TreePine, BedDouble, ShoppingBag,
   MessageSquare, LayoutDashboard, ChevronRight,
-  Loader2, Users, ShieldCheck, UserPlus, AlertTriangle
+  Loader2, Users, ShieldCheck, UserPlus, AlertTriangle, Search
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
@@ -13,6 +13,18 @@ import PropertyForm from './PropertyForm'
 import AdminUserForm from './AdminUserForm'
 
 const TABS = ['overview', 'properties', 'inquiries', 'admins']
+
+const PROPERTY_TYPE_FILTERS = ['All', 'land', 'house', 'apartment', 'farm', 'commercial', 'villa']
+const LISTING_FILTERS       = ['All', 'buy', 'rent']
+const STATUS_FILTERS        = ['All', 'active', 'draft', 'sold', 'rented']
+const PRICE_BANDS = [
+  { label: 'Any Price',         min: 0,          max: Infinity },
+  { label: 'Under KES 1M',      min: 0,          max: 1_000_000 },
+  { label: 'KES 1M – 5M',       min: 1_000_000,  max: 5_000_000 },
+  { label: 'KES 5M – 15M',      min: 5_000_000,  max: 15_000_000 },
+  { label: 'KES 15M – 50M',     min: 15_000_000, max: 50_000_000 },
+  { label: 'Above KES 50M',     min: 50_000_000, max: Infinity },
+]
 
 const typeIcon = (type) => ({
   land: <TreePine size={14} />,
@@ -37,6 +49,13 @@ export default function AdminDashboard() {
   const [deleting, setDeleting]     = useState(null) // property id
   const [confirmDelete, setConfirmDelete] = useState(null) // property to delete
   const [showAddAdmin, setShowAddAdmin] = useState(false)
+
+  // Property filters
+  const [locFilter, setLocFilter]         = useState('')
+  const [typeFilter, setTypeFilter]       = useState('All')
+  const [listingFilter, setListingFilter] = useState('All')
+  const [priceFilter, setPriceFilter]     = useState(0) // index into PRICE_BANDS
+  const [statusFilter, setStatusFilter]   = useState('All')
 
   useEffect(() => { loadData() }, [])
 
@@ -81,6 +100,26 @@ export default function AdminDashboard() {
   const rentCount   = properties.filter((p) => p.listing_type === 'rent').length
   const newInqs     = inquiries.filter((i) => i.status === 'new').length
   const activeCount = properties.filter((p) => p.status === 'active').length
+
+  const priceBand = PRICE_BANDS[priceFilter]
+  const filteredProperties = properties.filter((p) => {
+    const q = locFilter.trim().toLowerCase()
+    const matchLoc     = !q || p.location?.toLowerCase().includes(q) || p.county?.toLowerCase().includes(q)
+    const matchType    = typeFilter === 'All' || p.property_type === typeFilter
+    const matchListing = listingFilter === 'All' || p.listing_type === listingFilter
+    const matchPrice   = Number(p.price) >= priceBand.min && Number(p.price) < priceBand.max
+    const matchStatus  = statusFilter === 'All' || p.status === statusFilter
+    return matchLoc && matchType && matchListing && matchPrice && matchStatus
+  })
+  const hasPropertyFilters = locFilter || typeFilter !== 'All' || listingFilter !== 'All' || priceFilter !== 0 || statusFilter !== 'All'
+
+  function clearPropertyFilters() {
+    setLocFilter('')
+    setTypeFilter('All')
+    setListingFilter('All')
+    setPriceFilter(0)
+    setStatusFilter('All')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -204,7 +243,7 @@ export default function AdminDashboard() {
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="font-semibold text-gray-800 text-lg">
-                    All Properties <span className="text-gray-400 font-normal text-base">({properties.length})</span>
+                    All Properties <span className="text-gray-400 font-normal text-base">({filteredProperties.length})</span>
                   </h2>
                   <button
                     onClick={() => setModal('add')}
@@ -212,6 +251,68 @@ export default function AdminDashboard() {
                   >
                     <Plus size={15} /> Add Property
                   </button>
+                </div>
+
+                {/* Filters */}
+                <div className="flex flex-wrap gap-2 items-center mb-4">
+                  <div className="relative flex-1 min-w-48">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      value={locFilter}
+                      onChange={(e) => setLocFilter(e.target.value)}
+                      placeholder="Filter by location or county…"
+                      className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest"
+                    />
+                  </div>
+
+                  <select
+                    value={typeFilter}
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest capitalize"
+                  >
+                    {PROPERTY_TYPE_FILTERS.map((t) => (
+                      <option key={t} value={t}>{t === 'All' ? 'All Types' : t}</option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={listingFilter}
+                    onChange={(e) => setListingFilter(e.target.value)}
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest"
+                  >
+                    {LISTING_FILTERS.map((l) => (
+                      <option key={l} value={l}>{l === 'All' ? 'All Listings' : l === 'buy' ? 'For Sale' : 'For Rent'}</option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={priceFilter}
+                    onChange={(e) => setPriceFilter(Number(e.target.value))}
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest"
+                  >
+                    {PRICE_BANDS.map((band, i) => (
+                      <option key={i} value={i}>{band.label}</option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest capitalize"
+                  >
+                    {STATUS_FILTERS.map((s) => (
+                      <option key={s} value={s}>{s === 'All' ? 'All Statuses' : s}</option>
+                    ))}
+                  </select>
+
+                  {hasPropertyFilters && (
+                    <button
+                      onClick={clearPropertyFilters}
+                      className="flex items-center gap-1 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <X size={13} /> Clear
+                    </button>
+                  )}
                 </div>
 
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -228,7 +329,7 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
-                        {properties.map((p) => (
+                        {filteredProperties.map((p) => (
                           <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
@@ -292,10 +393,12 @@ export default function AdminDashboard() {
                             </td>
                           </tr>
                         ))}
-                        {properties.length === 0 && (
+                        {filteredProperties.length === 0 && (
                           <tr>
                             <td colSpan={6} className="px-4 py-12 text-center text-gray-400">
-                              No properties yet. Click "Add Property" to get started.
+                              {properties.length === 0
+                                ? 'No properties yet. Click "Add Property" to get started.'
+                                : 'No properties match your filters.'}
                             </td>
                           </tr>
                         )}

@@ -15,12 +15,15 @@ export default function Navbar() {
     <nav className="fixed top-0 inset-x-0 z-50 bg-forest shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center shrink-0">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <img
             src="/hhr.jpeg"
             alt="Heaven & Hearth Realty"
             className="h-12 sm:h-14 w-auto object-contain"
           />
+          <span className="text-white font-bold text-lg sm:text-xl tracking-tight whitespace-nowrap">
+            Heaven<span className="text-gold">&amp;</span>Hearth
+          </span>
         </Link>
 
         {/* Desktop nav — centered */}
