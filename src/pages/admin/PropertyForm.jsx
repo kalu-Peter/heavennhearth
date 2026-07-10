@@ -7,13 +7,14 @@ const PROPERTY_TYPES = ['land', 'house', 'apartment', 'farm', 'commercial', 'vil
 const AREA_UNITS     = ['sqm', 'acres', 'hectares', 'ft²']
 const BADGES         = ['Hot Deal', 'New', 'Featured', 'For Sale', 'For Rent']
 const KENYAN_COUNTIES = [
-  'Nairobi','Mombasa','Kisumu','Nakuru','Eldoret','Thika','Nyeri','Machakos',
-  'Kiambu','Kilifi','Kwale','Taita-Taveta','Kajiado','Makueni','Kitui','Meru',
-  'Embu','Tharaka-Nithi','Kirinyaga','Murang\'a','Nyandarua','Laikipia','Samburu',
-  'Trans-Nzoia','Uasin Gishu','Elgeyo-Marakwet','Nandi','Baringo','Kericho','Bomet',
-  'Kakamega','Vihiga','Bungoma','Busia','Siaya','Kisii','Nyamira','Migori','Homa Bay',
-  'Narok','Turkana','West Pokot','Marsabit','Isiolo','Garissa','Wajir','Mandera',
-  'Tana River','Lamu','Meru','Nyeri'
+  'Mombasa', 'Kwale', 'Kilifi', 'Tana River', 'Lamu', 'Taita-Taveta',
+  'Garissa', 'Wajir', 'Mandera', 'Marsabit', 'Isiolo', 'Meru',
+  'Tharaka-Nithi', 'Embu', 'Kitui', 'Machakos', 'Makueni', 'Nyandarua',
+  'Nyeri', 'Kirinyaga', 'Murang\'a', 'Kiambu', 'Turkana', 'West Pokot',
+  'Samburu', 'Trans-Nzoia', 'Uasin Gishu', 'Elgeyo-Marakwet', 'Nandi',
+  'Baringo', 'Laikipia', 'Nakuru', 'Narok', 'Kajiado', 'Kericho', 'Bomet',
+  'Kakamega', 'Vihiga', 'Bungoma', 'Busia', 'Siaya', 'Kisumu', 'Homa Bay',
+  'Migori', 'Kisii', 'Nyamira', 'Nairobi',
 ]
 
 const empty = {
