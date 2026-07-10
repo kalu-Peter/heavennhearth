@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { Home, LogIn, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { LogIn, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 
 export default function AdminLogin() {
   const { signIn, user } = useAuth()
@@ -47,12 +47,11 @@ export default function AdminLogin() {
         </Link>
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 text-forest">
-            <Home size={36} />
-            <span className="text-3xl font-bold tracking-tight">
-              Heaven<span className="text-gold">&amp;</span>Hearth Realty
-            </span>
-          </div>
+          <img
+            src="/hhr.jpeg"
+            alt="Heaven & Hearth Realty"
+            className="h-20 w-auto object-contain mx-auto"
+          />
           <p className="mt-2 text-gray-500 text-sm">Admin Portal</p>
         </div>
 

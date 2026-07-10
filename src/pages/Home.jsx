@@ -185,10 +185,10 @@ export default function HomePage() {
             </span>
 
             <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-5">
-              Discover Prime Land{' '}
+              The Easy Way to Buy, Sell{' '}
               <span className="text-gold">&amp;</span>{' '}
-              Property Across{' '}
-              <span className="text-gold">Kenya</span>
+              Rent{' '}
+              <span className="text-gold">Property</span>
             </h1>
 
             <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-lg">

@@ -4,7 +4,7 @@ import {
   Home, LogOut, Plus, Pencil, Trash2, X,
   Building2, TreePine, BedDouble, ShoppingBag,
   MessageSquare, LayoutDashboard, ChevronRight,
-  Loader2, Users, ShieldCheck, UserPlus
+  Loader2, Users, ShieldCheck, UserPlus, AlertTriangle
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
@@ -35,6 +35,7 @@ export default function AdminDashboard() {
   // Modal state
   const [modal, setModal]           = useState(null) // null | 'add' | { property }
   const [deleting, setDeleting]     = useState(null) // property id
+  const [confirmDelete, setConfirmDelete] = useState(null) // property to delete
   const [showAddAdmin, setShowAddAdmin] = useState(false)
 
   useEffect(() => { loadData() }, [])
@@ -63,6 +64,7 @@ export default function AdminDashboard() {
     await supabase.from('properties').delete().eq('id', id)
     setProperties((prev) => prev.filter((p) => p.id !== id))
     setDeleting(null)
+    setConfirmDelete(null)
   }
 
   async function updateInquiryStatus(id, status) {
@@ -85,10 +87,7 @@ export default function AdminDashboard() {
       {/* Top bar */}
       <header className="bg-forest text-white px-6 py-4 flex items-center justify-between shadow-md">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-xl">&#x2302;</span>
-          <span className="font-bold text-lg">
-            Heaven<span className="text-gold">&amp;</span>Hearth
-          </span>
+          <img src="/hhr.jpeg" alt="Heaven & Hearth Realty" className="h-9 w-auto object-contain rounded" />
           <ChevronRight size={14} className="opacity-50" />
           <span className="text-sm opacity-70">Admin</span>
         </Link>
@@ -279,7 +278,7 @@ export default function AdminDashboard() {
                                   <Pencil size={14} />
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(p.id)}
+                                  onClick={() => setConfirmDelete(p)}
                                   disabled={deleting === p.id}
                                   className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
                                   title="Delete"
@@ -466,6 +465,39 @@ export default function AdminDashboard() {
                 onSaved={() => { setModal(null); loadData() }}
                 onCancel={() => setModal(null)}
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CONFIRM DELETE MODAL ── */}
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+              <AlertTriangle size={22} className="text-red-500" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-lg mb-1.5">Delete this property?</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              Are you sure you want to delete <span className="font-medium text-gray-700">"{confirmDelete.title}"</span>?
+              This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                disabled={deleting === confirmDelete.id}
+                className="px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(confirmDelete.id)}
+                disabled={deleting === confirmDelete.id}
+                className="flex items-center gap-2 bg-red-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors disabled:opacity-60"
+              >
+                {deleting === confirmDelete.id && <Loader2 size={15} className="animate-spin" />}
+                {deleting === confirmDelete.id ? 'Deleting…' : 'Yes, Delete'}
+              </button>
             </div>
           </div>
         </div>
