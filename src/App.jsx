@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home           from './pages/Home'
 import Buy            from './pages/Buy'
 import Rent           from './pages/Rent'
+import About          from './pages/About'
 import PropertyDetail from './pages/PropertyDetail'
 import AdminLogin     from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
@@ -38,6 +39,7 @@ export default function App() {
                     <Route path="/"                element={<Home />} />
                     <Route path="/buy"             element={<Buy />} />
                     <Route path="/rent"            element={<Rent />} />
+                    <Route path="/about"           element={<About />} />
                     <Route path="/property/:id"    element={<PropertyDetail />} />
                   </Routes>
                 </main>

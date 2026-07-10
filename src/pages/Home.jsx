@@ -13,7 +13,7 @@ import { getProperties } from '../api/properties'
 const heroStats = [
   { value: '50+', label: 'Listings' },
   { value: '47', label: 'Counties' },
-  { value: '98%', label: 'Verified' },
+  { value: '100%', label: 'Verified' },
   { value: '200+', label: 'Clients' },
 ]
 

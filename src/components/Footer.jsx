@@ -99,7 +99,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 py-5 px-4 text-center text-white/40 text-xs">
-        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Realty Ltd. Kwale, Kenya. All rights reserved.
+        &copy; {new Date().getFullYear()} Heaven &amp; Hearth Realty. Kwale, Kenya. All rights reserved.
       </div>
     </footer>
   )
