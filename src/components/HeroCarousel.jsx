@@ -4,7 +4,6 @@ const IMAGES = [
   '/beach plot.jpg',
   '/hero.jpg',
   '/hh.jpg',
-  '/house.jpg',
   '/villa.jpg',
   '/villa2.jpg',
   '/runda.jpg',
