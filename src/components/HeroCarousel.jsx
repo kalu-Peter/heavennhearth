@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const IMAGES = [
+  '/beach plot.jpg',
   '/hero.jpg',
   '/hh.jpg',
   '/house.jpg',
@@ -8,7 +9,6 @@ const IMAGES = [
   '/villa2.jpg',
   '/runda.jpg',
   '/beach house.jpg',
-  '/beach plot.jpg',
   '/farm land.jpg',
   '/ranch land.jpg',
   '/american stylre.jpg',
