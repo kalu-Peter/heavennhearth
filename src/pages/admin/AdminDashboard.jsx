@@ -4,13 +4,15 @@ import {
   Home, LogOut, Plus, Pencil, Trash2, X,
   Building2, TreePine, BedDouble, ShoppingBag,
   MessageSquare, LayoutDashboard, ChevronRight,
-  Loader2
+  Loader2, Users, ShieldCheck, UserPlus
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { getAdmins } from '../../api/admin'
 import PropertyForm from './PropertyForm'
+import AdminUserForm from './AdminUserForm'
 
-const TABS = ['overview', 'properties', 'inquiries']
+const TABS = ['overview', 'properties', 'inquiries', 'admins']
 
 const typeIcon = (type) => ({
   land: <TreePine size={14} />,
@@ -27,17 +29,19 @@ export default function AdminDashboard() {
   const [tab, setTab]               = useState('overview')
   const [properties, setProperties] = useState([])
   const [inquiries, setInquiries]   = useState([])
+  const [admins, setAdmins]         = useState([])
   const [loading, setLoading]       = useState(true)
 
   // Modal state
   const [modal, setModal]           = useState(null) // null | 'add' | { property }
   const [deleting, setDeleting]     = useState(null) // property id
+  const [showAddAdmin, setShowAddAdmin] = useState(false)
 
   useEffect(() => { loadData() }, [])
 
   async function loadData() {
     setLoading(true)
-    const [{ data: props }, { data: inqs }] = await Promise.all([
+    const [{ data: props }, { data: inqs }, adminRows] = await Promise.all([
       supabase
         .from('properties')
         .select('*, property_images(id, url, is_primary), property_features(feature)')
@@ -46,9 +50,11 @@ export default function AdminDashboard() {
         .from('inquiries')
         .select('*, properties(title)')
         .order('created_at', { ascending: false }),
+      getAdmins(),
     ])
     setProperties(props ?? [])
     setInquiries(inqs ?? [])
+    setAdmins(adminRows ?? [])
     setLoading(false)
   }
 
@@ -116,6 +122,7 @@ export default function AdminDashboard() {
               {t === 'overview'    && <LayoutDashboard size={13} className="inline mr-1.5 -mt-0.5" />}
               {t === 'properties'  && <Building2 size={13} className="inline mr-1.5 -mt-0.5" />}
               {t === 'inquiries'   && <MessageSquare size={13} className="inline mr-1.5 -mt-0.5" />}
+              {t === 'admins'      && <Users size={13} className="inline mr-1.5 -mt-0.5" />}
               {t}
               {t === 'inquiries' && newInqs > 0 && (
                 <span className="ml-1.5 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
@@ -364,6 +371,68 @@ export default function AdminDashboard() {
                 </div>
               </div>
             )}
+
+            {/* ── ADMINS ── */}
+            {tab === 'admins' && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="font-semibold text-gray-800 text-lg">
+                    Admin Users <span className="text-gray-400 font-normal text-base">({admins.length})</span>
+                  </h2>
+                  <button
+                    onClick={() => setShowAddAdmin(true)}
+                    className="flex items-center gap-2 bg-forest text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-forest-light transition-colors"
+                  >
+                    <UserPlus size={15} /> Add Admin
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                          <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</th>
+                          <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
+                          <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Role</th>
+                          <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Added</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {admins.map((a) => (
+                          <tr key={a.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-4 py-3 font-medium text-gray-800">
+                              {a.full_name || '—'}
+                              {a.id === profile?.id && (
+                                <span className="ml-2 text-xs text-gray-400 font-normal">(you)</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">{a.email}</td>
+                            <td className="px-4 py-3">
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
+                                a.role === 'super_admin' ? 'bg-gold/20 text-gold' : 'bg-forest/10 text-forest'
+                              }`}>
+                                <ShieldCheck size={11} /> {a.role.replace('_', ' ')}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-gray-400">
+                              {new Date(a.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </td>
+                          </tr>
+                        ))}
+                        {admins.length === 0 && (
+                          <tr>
+                            <td colSpan={4} className="px-4 py-12 text-center text-gray-400">
+                              No admin users found.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -396,6 +465,29 @@ export default function AdminDashboard() {
                 }
                 onSaved={() => { setModal(null); loadData() }}
                 onCancel={() => setModal(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── ADD ADMIN MODAL ── */}
+      {showAddAdmin && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md my-8">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-gray-900">Add Admin User</h2>
+              <button
+                onClick={() => setShowAddAdmin(false)}
+                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="px-6 py-5">
+              <AdminUserForm
+                onSaved={() => { setShowAddAdmin(false); loadData() }}
+                onCancel={() => setShowAddAdmin(false)}
               />
             </div>
           </div>

@@ -11,10 +11,10 @@ import { getProperties } from '../api/properties'
 /* ─── Data ─────────────────────────────────────────────────── */
 
 const heroStats = [
-  { value: '1,200+', label: 'Listings' },
+  { value: '50+', label: 'Listings' },
   { value: '47', label: 'Counties' },
   { value: '98%', label: 'Verified' },
-  { value: '3,400+', label: 'Clients' },
+  { value: '200+', label: 'Clients' },
 ]
 
 const cities = [
@@ -545,7 +545,7 @@ export default function HomePage() {
             Ready to Buy, Sell or<br className="hidden sm:block" /> Invest in Kenya?
           </h2>
           <p className="text-white/65 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Join 3,400+ Kenyans who have found their perfect property through Heaven &amp; Hearth Realty.
+            Join 200+ Kenyans who have found their perfect property through Heaven &amp; Hearth Realty.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
